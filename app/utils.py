@@ -4,10 +4,9 @@ from typing import Any, Iterable
 from django.core.exceptions import ValidationError
 
 
-logger = logging.getLogger(__name__)
-
 
 def fetch_cities() -> Iterable[dict[str, Any]]:
+    logger = logging.getLogger(__name__)
     logger.info("Fetching Brazilian cities from IBGE...")
     client = httpx.Client(http2=True)
     url = 'https://servicodados.ibge.gov.br/api/v1/localidades/municipios'
