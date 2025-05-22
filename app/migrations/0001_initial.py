@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=80)),
                 ('birth_date', models.DateField(blank=True, null=True)),
                 ('registration_source', models.CharField(choices=[('whatsapp', 'whatsapp'), ('website', 'website')], editable=False, max_length=50)),
-                ('cpf', models.CharField(max_length=14, validators=[app.utils.validate_cpf])),
+                ('cpf', models.CharField(max_length=14, validators=[app.validators.validate_cpf])),
                 ('email', models.EmailField(blank=True, max_length=60, null=True)),
                 ('phone', models.CharField(max_length=15)),
                 ('is_active', models.BooleanField(default=True)),
@@ -67,7 +67,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=80)),
-                ('cpf', models.CharField(max_length=14, validators=[app.utils.validate_cpf])),
+                ('cpf', models.CharField(max_length=14, validators=[app.validators.validate_cpf])),
                 ('speciality', models.CharField(max_length=50)),
                 ('email', models.EmailField(max_length=60)),
                 ('phone', models.CharField(max_length=15)),
