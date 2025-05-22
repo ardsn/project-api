@@ -75,39 +75,6 @@ def validate_duration(duration: timedelta) -> None:
         )
 
 
-def validate_source(source: str) -> None:
-    """
-    Validates if the source is valid.
-    """
-    if not Source.is_valid(source):
-        raise ValidationError(
-            'The source must be one of the following: %(choices)s. Got: %(value)s',
-            params={'choices': [source.name for source in Source], 'value': source}
-        )
-
-
-def validate_status(status: str) -> None:
-    """
-    Validates if the status is valid.
-    """
-    if not AppointmentStatus.is_valid(status):
-        raise ValidationError(
-            'The status must be one of the following: %(choices)s. Got: %(value)s',
-            params={'choices': [status.name for status in AppointmentStatus], 'value': status}
-        )
-    
-
-def validate_business_category(category: str) -> None:
-    """
-    Validates if the business category is valid.
-    """
-    if not BusinessCategory.is_valid(category):
-        raise ValidationError(
-            'The category must be one of the following: %(choices)s. Got: %(value)s',
-            params={'choices': [category.name for category in BusinessCategory], 'value': category}
-        )
-
-
 def validate_phone_number(value):
     """
     Validates Brazilian phone numbers in the format DDD + number.

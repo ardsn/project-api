@@ -4,10 +4,7 @@ from app.validators import (
     validate_date,
     validate_datetime,
     validate_price,
-    validate_duration,
-    validate_source,
-    validate_status,
-    validate_business_category
+    validate_duration
 )
 from datetime import date, datetime, timedelta
 from unittest import TestCase
@@ -61,27 +58,6 @@ class TestValidators(TestCase):
 
         with self.assertRaises(ValidationError):
             validate_duration(timedelta(seconds=59.0))
-
-    def test_validate_source(self):
-        self.assertIsNone(validate_source("whatsapp"))
-        self.assertIsNone(validate_source("WEBSITE"))
-
-        with self.assertRaises(ValidationError):
-            validate_source("app")
-
-    def test_validate_status(self):
-        self.assertIsNone(validate_status("scheduled"))
-        self.assertIsNone(validate_status("CONFIRMED"))
-
-        with self.assertRaises(ValidationError):
-            validate_status("FINISHED")
-
-    def test_validate_business_category(self):
-        self.assertIsNone(validate_business_category("C5"))
-        self.assertIsNone(validate_business_category("c1"))
-
-        with self.assertRaises(ValidationError):
-            validate_business_category("C50")
 
     def test_validate_phone_number(self):
         self.assertIsNone(validate_phone_number("11995954250"))
