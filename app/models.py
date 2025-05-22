@@ -197,7 +197,6 @@ class Professional(models.Model):
         super().save(**kwargs)
 
 
-# TODO: Finish the model
 class AvailableDay(models.Model):
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
     # If the professional is not set, the day is available for all professionals
