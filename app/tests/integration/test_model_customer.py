@@ -1,0 +1,117 @@
+from django.test import TestCase
+from django.core.exceptions import ValidationError
+from app.models import Customer, Business, City
+
+
+class TestCustomerModel(TestCase):
+
+    def setUp(self) -> None:
+        self.business = Business.objects.create(
+            name="Clínica Fagundes",
+            category="C1",
+            city=City.objects.get(name="Ariquemes", state="RO"),
+            address="Rua 1",
+            public_phone="(12) 3456-7890",
+            restricted_phone="(12) 3456-7890",
+            email="clinica@fagundes.com",
+            schedule={"lunch": {"start": "12:00", "end": "13:00"}},
+            closed_on_holidays=False
+        )
+
+    def test_validate_registration_source(self):
+        fixed_params = {
+            "business": self.business,
+            "name": "João da Silva",
+            "email": "joao.silva@example.com",
+            "phone": "(89) 99595-4250",
+            "cpf": "111.444.777-35"
+        }
+
+        customer = Customer.objects.create(**fixed_params, registration_source="WEBSITE")
+        self.assertIsInstance(customer, Customer)
+
+        with self.assertRaises(ValidationError):
+            Customer.objects.create(
+                **fixed_params,
+                registration_source="APP"
+            )
+
+        # Tear down
+        customer.delete()
+
+    def test_validate_cpf(self):
+        fixed_params = {
+            "business": self.business,
+            "name": "João da Silva",
+            "email": "joao.silva@example.com",
+            "phone": "(89) 99595-4250",
+            "registration_source": "WHATSAPP"
+        }
+
+        customer = Customer.objects.create(**fixed_params, cpf="111.444.777-35")
+        self.assertIsInstance(customer, Customer)
+
+        with self.assertRaises(ValidationError):
+            Customer.objects.create(**fixed_params, cpf="123.456.789-00")
+
+        # Tear down
+        customer.delete()
+
+    def test_validate_phone(self):
+        fixed_params = {
+            "business": self.business,
+            "name": "João da Silva",
+            "email": "joao.silva@example.com",
+            "cpf": "111.444.777-35",
+            "registration_source": "WHATSAPP"
+        }
+
+        customer = Customer.objects.create(**fixed_params, phone="11995954250")
+        self.assertIsInstance(customer, Customer)
+
+        with self.assertRaises(ValidationError):
+            Customer.objects.create(**fixed_params, phone="(11) 1595-4250")
+
+        # Tear down
+        customer.delete()
+
+    def test_unique_constraint(self):
+        params = {
+            "business": self.business,
+            "name": "João da Silva",
+            "email": "joao.silva@example.com",
+            "phone": "11995954250",
+            "cpf": "111.444.777-35",
+            "registration_source": "WHATSAPP"
+        }
+
+        customer = Customer.objects.create(**params)
+        self.assertIsInstance(customer, Customer)
+
+        with self.assertRaises(ValidationError):
+            Customer.objects.create(**params)
+
+        # Tear down
+        customer.delete()
+
+    def test_standardize_data(self):
+        customer = Customer.objects.create(
+            business=self.business,
+            name="João da Silva",
+            email="JOAO.SILVA@EXAMPLE.COM ",
+            phone="(21) 3456-7890",
+            cpf="111.444.777-35",
+            registration_source="website"
+        )
+        self.assertEqual(Customer.objects.get(id=1).name, "João Da Silva")
+        self.assertEqual(Customer.objects.get(id=1).registration_source, "WEBSITE")
+        self.assertEqual(Customer.objects.get(id=1).email, "joao.silva@example.com")
+        self.assertEqual(Customer.objects.get(id=1).phone, "2134567890")
+        self.assertEqual(Customer.objects.get(id=1).cpf, "11144477735")
+
+        # Tear down
+        customer.delete()
+
+    def tearDown(self) -> None:
+        Customer.objects.all().delete()
+        self.business.delete()
