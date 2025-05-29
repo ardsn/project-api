@@ -4,7 +4,9 @@ from app.validators import (
     validate_date,
     validate_datetime,
     validate_price,
-    validate_duration
+    validate_duration,
+    validate_birth_date,
+    validate_schedule
 )
 from datetime import date, datetime, timedelta
 from unittest import TestCase
@@ -87,3 +89,153 @@ class TestValidators(TestCase):
 
         with self.assertRaises(ValidationError, msg="Landline numbers must start with 2, 3, 4, or 5 after the area code."):
             validate_phone_number("(11) 6595-4250")
+
+    @patch("app.validators.datetime")
+    def test_validate_birth_date(self, mock_datetime):
+        mock_datetime.now.side_effect = lambda *args, **kwargs: datetime(2025, 1, 1)
+
+        self.assertIsNone(validate_birth_date(date(1970, 1, 1)))
+
+        with self.assertRaises(ValidationError, msg="The birth date cannot be in the future. Received: 2025-01-02, Actual: 2025-01-01"):
+            validate_birth_date(date(2025, 1, 2))
+
+        with self.assertRaises(ValidationError, msg="The age cannot be greater than 120 years. Calculated age: 121 years"):
+            validate_birth_date(date(1904, 1, 1))
+
+
+    def test_validate_schedule(self):
+        self.assertIsNone(validate_schedule({
+            "0": {
+                "start": "08:00",
+                "end": "17:00",
+                "breaks": [
+                    {"start": "10:00", "end": "10:30"},
+                    {"start": "13:00", "end": "14:00"}
+                ]
+            }
+        }))
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "MON": {
+                "start": "08:00",
+                "end": "17:00",
+                "breaks": []
+            }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "7": {
+                "start": "08:00",
+                "end": "17:00",
+                "breaks": []
+            }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": '{"start": "08:00", "end": "17:00", "breaks": []}'
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule(
+                {
+                    "0": {
+                        "start": "08:00", "breaks": []
+                    }
+                })
+            
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": {
+                    "start": "08:00",
+                    "end": "08:00",
+                    "breaks": []
+                }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": {
+                    "start": "09:00",
+                    "end": "08:00",
+                    "breaks": []
+                }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": "09:00-10:00"
+                }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": [
+                        "09:00-10:00",
+                        "11:00-12:00"
+                    ]
+                }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": [
+                        {"start": "09:00"}
+                    ]
+                }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": [
+                        {"start": "08:00", "end": "08:00"}
+                    ]
+                }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": [
+                        {"start": "09:00", "end": "08:00"}
+                    ]
+                }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": [
+                        {"start": "07:00", "end": "08:00"}
+                    ]
+                }
+            })
+
+        with self.assertRaises(ValidationError):
+            validate_schedule({
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": [
+                        {"start": "17:00", "end": "18:00"}
+                    ]
+                }
+            })

@@ -13,7 +13,9 @@ from .validators import (
     validate_datetime,
     validate_cpf,
     validate_duration,
-    validate_phone_number
+    validate_phone_number,
+    validate_birth_date,
+    validate_schedule
 )
 from django.db import models
 
@@ -57,7 +59,7 @@ class Business(models.Model):
     public_phone = models.CharField(max_length=15, validators=[validate_phone_number])
     restricted_phone = models.CharField(max_length=15, validators=[validate_phone_number])
     email = models.EmailField(max_length=100)
-    schedule = models.JSONField()
+    schedule = models.JSONField(validators=[validate_schedule])
     closed_on_holidays = models.BooleanField()
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -86,16 +88,15 @@ class Business(models.Model):
         super().save(**kwargs)
 
 
-
 class Customer(models.Model):
     business = models.ForeignKey(Business, on_delete=models.CASCADE)
     name = models.CharField(max_length=80)
-    birth_date = models.DateField(blank=True, null=True)
-    registration_source = models.CharField(
-        max_length=50,
-        choices=SOURCE_CHOICES,
-        editable=False
+    birth_date = models.DateField(
+        blank=True,
+        null=True,
+        validators=[validate_birth_date]
     )
+    registration_source = models.CharField(max_length=50, choices=SOURCE_CHOICES)
     cpf = models.CharField(
         max_length=14,
         validators=[validate_cpf]
@@ -170,9 +171,9 @@ class Professional(models.Model):
     )
     speciality = models.CharField(max_length=50)
     email = models.EmailField(max_length=60)
-    phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=15, validators=[validate_phone_number])
     is_active = models.BooleanField(default=True)
-    schedule = models.JSONField()
+    schedule = models.JSONField(validators=[validate_schedule])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

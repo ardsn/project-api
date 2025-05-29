@@ -22,7 +22,13 @@ class TestAvailableDayModel(TestCase):
             public_phone="(12) 3456-7890",
             restricted_phone="(12) 3456-7890",
             email="clinica@fagundes.com",
-            schedule={"lunch": {"start": "12:00", "end": "13:00"}},
+            schedule={
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": []
+                }
+            },
             closed_on_holidays=False
         )
 
@@ -33,7 +39,13 @@ class TestAvailableDayModel(TestCase):
             speciality="cardiologista",
             email="Joao.silva@example.com",
             phone="(21) 3456-7890",
-            schedule={"lunch": {"start": "12:00", "end": "13:00"}}
+            schedule={
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": []
+                }
+            }
         )
 
     def test_validate_date(self):

@@ -15,7 +15,13 @@ class TestBusinessModel(TestCase):
             "public_phone": "(89) 99595-4250",
             "restricted_phone": "(89) 99595-4250",
             "email": "clinica@fagundes.com",
-            "schedule": {"lunch": {"start": "12:00", "end": "13:00"}},
+            "schedule": {
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": []
+                }
+            },
             "closed_on_holidays": True
         }
 
@@ -42,7 +48,13 @@ class TestBusinessModel(TestCase):
             "address": "Rua 1",
             "restricted_phone": "(89) 99595-4250",
             "email": "clinica@fagundes.com",
-            "schedule": {"lunch": {"start": "12:00", "end": "13:00"}},
+            "schedule": {
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": []
+                }
+            },
             "closed_on_holidays": True,
             "category": "C1"
         }
@@ -70,7 +82,13 @@ class TestBusinessModel(TestCase):
             "address": "Rua 1",
             "public_phone": "(89) 99595-4250",
             "email": "clinica@fagundes.com",
-            "schedule": {"lunch": {"start": "12:00", "end": "13:00"}},
+            "schedule": {
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": []
+                }
+            },
             "closed_on_holidays": True,
             "category": "C1"
         }
@@ -91,7 +109,29 @@ class TestBusinessModel(TestCase):
 
         # Tear down
         business.delete()
-
+        
+    def test_validate_schedule(self):
+        with self.assertRaises(ValidationError):
+            Business.objects.create(
+                name="NAME",
+                city=self.city,
+                address="Rua 1",
+                public_phone="(89) 99595-4250",
+                restricted_phone="(89) 99595-4250",
+                email="clinica@fagundes.com",
+                closed_on_holidays=True,
+                category="C1",
+                schedule={
+                    "0": {
+                            "start": "08:00",
+                            "end": "17:00",
+                            "breaks": [
+                                {"start": "17:00", "end": "18:00"}
+                            ]
+                    }
+                }
+            )
+            
     def test_unique_constraint(self):
         params = {
             "name": "NAME",
@@ -101,7 +141,13 @@ class TestBusinessModel(TestCase):
             "public_phone": "(89) 99595-4250",
             "restricted_phone": "(89) 99595-4250",
             "email": "clinica@fagundes.com",
-            "schedule": {"lunch": {"start": "12:00", "end": "13:00"}},
+            "schedule": {
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": []
+                }
+            },
             "closed_on_holidays": True
         }
 
@@ -123,7 +169,13 @@ class TestBusinessModel(TestCase):
             public_phone="(12) 3456-7890",
             restricted_phone="(12) 3456-7890",
             email="CLINICA@FAGUNDES.COM ",
-            schedule={"lunch": {"start": "12:00", "end": "13:00"}},
+            schedule={
+                "0": {
+                    "start": "08:00",
+                    "end": "17:00",
+                    "breaks": []
+                }
+            },
             closed_on_holidays=False
         )
         self.assertEqual(Business.objects.get(id=1).name, "Clínica Fagundes")
