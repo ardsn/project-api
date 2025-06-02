@@ -75,7 +75,7 @@ class Business(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.name} | {self.category} | {self.city}/{self.state}"
+        return f"{self.name} | {self.category} | {self.city}"
 
     def save(self, **kwargs):
         # Standardize the data for database
@@ -116,6 +116,9 @@ class Customer(models.Model):
             )
         ]
 
+    def __str__(self):
+        return self.name
+
     def save(self, **kwargs):
         # Standardize the data for database
         self.name = self.name.title()
@@ -152,7 +155,7 @@ class Service(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.business.name} | {self.name}"
+        return self.name
 
     def save(self, **kwargs):
         # Standardize the data for database
@@ -185,6 +188,9 @@ class Professional(models.Model):
             )
         ]
 
+    def __str__(self):
+        return self.name
+    
     def save(self, **kwargs):
         # Standardize the data for database
         self.email = standardize_email(self.email)
