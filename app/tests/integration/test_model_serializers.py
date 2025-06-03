@@ -5,15 +5,16 @@ from datetime import time, datetime
 from zoneinfo import ZoneInfo
 from unittest.mock import patch
 
-class AvailableDayModelSerializer(TestCase):
+class TestAvailableDayModelSerializer(TestCase):
 
-    def setUp(self):
-        self.now: datetime = (
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.now: datetime = (
             datetime
             .now(tz=ZoneInfo("America/Sao_Paulo"))
         )
 
-        self.business = Business.objects.create(
+        cls.business = Business.objects.create(
             name="Clínica Fagundes",
             category="C1",
             city=City.objects.get(name="Ariquemes", state="RO"),
@@ -31,8 +32,8 @@ class AvailableDayModelSerializer(TestCase):
             closed_on_holidays=False
         )
 
-        self.professional = Professional.objects.create(
-            business=self.business,
+        cls.professional = Professional.objects.create(
+            business=cls.business,
             name="JOÃO DA SILVA",
             cpf="111.444.777-35",
             speciality="cardiologista",

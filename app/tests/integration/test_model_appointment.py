@@ -8,9 +8,10 @@ from unittest.mock import patch
 
 class TestAppointmentModel(TestCase):
 
-    def setUp(self) -> None:
-        self.now = datetime.now(ZoneInfo("America/Sao_Paulo"))
-        self.business = Business.objects.create(
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.now = datetime.now(ZoneInfo("America/Sao_Paulo"))
+        cls.business = Business.objects.create(
             name="Clínica Fagundes",
             category="C1",
             city=City.objects.get(name="Ariquemes", state="RO"),
@@ -28,8 +29,8 @@ class TestAppointmentModel(TestCase):
             closed_on_holidays=False
         )
 
-        self.professional = Professional.objects.create(
-            business=self.business,
+        cls.professional = Professional.objects.create(
+            business=cls.business,
             name="JOÃO DA SILVA",
             cpf="111.444.777-35",
             speciality="cardiologista",
@@ -44,8 +45,8 @@ class TestAppointmentModel(TestCase):
             }
         )
 
-        self.customer = Customer.objects.create(
-            business=self.business,
+        cls.customer = Customer.objects.create(
+            business=cls.business,
             name="João da Silva",
             email="JOAO.SILVA@EXAMPLE.COM",
             phone="(21) 3456-7890",
@@ -53,8 +54,8 @@ class TestAppointmentModel(TestCase):
             registration_source="website"
         )
 
-        self.service = Service.objects.create(
-            business=self.business,
+        cls.service = Service.objects.create(
+            business=cls.business,
             name="serviço de teste",
             description="Descrição do serviço",
             price=100.00,
@@ -86,9 +87,6 @@ class TestAppointmentModel(TestCase):
                 datetime=self.now - timedelta(minutes=10)
             )
 
-        # Tear down
-        appointment.delete()
-
     def test_validate_status(self):
         fixed_params = {
             "business": self.business,
@@ -110,9 +108,6 @@ class TestAppointmentModel(TestCase):
                 **fixed_params,
                 status="FINISHED"
             )
-
-        # Tear down
-        appointment.delete()
 
     def test_validate_source(self):
         fixed_params = {
@@ -136,9 +131,6 @@ class TestAppointmentModel(TestCase):
                 source="APP"
             )
 
-        # Tear down
-        appointment.delete()
-
     def test_unique_constraint(self):
         params = {
             "business": self.business,
@@ -156,9 +148,6 @@ class TestAppointmentModel(TestCase):
         with self.assertRaises(ValidationError):
             Appointment.objects.create(**params)
 
-        # Tear down
-        appointment.delete()
-
     def test_standardize_data(self):
 
         appointment = Appointment.objects.create(
@@ -174,13 +163,3 @@ class TestAppointmentModel(TestCase):
         self.assertIsInstance(appointment, Appointment)
         self.assertEqual(Appointment.objects.get(id=1).status, "SCHEDULED")
         self.assertEqual(Appointment.objects.get(id=1).source, "WEBSITE")
-
-        # Tear down
-        appointment.delete()
-
-    def tearDown(self) -> None:
-        Appointment.objects.all().delete()
-        self.customer.delete()
-        self.service.delete()
-        self.professional.delete()
-        self.business.delete()

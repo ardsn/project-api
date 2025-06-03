@@ -5,8 +5,9 @@ from app.models import Business, City
 
 class TestBusinessModel(TestCase):
 
-    def setUp(self) -> None:
-        self.city = City.objects.get(name="Ariquemes", state="RO")
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.city = City.objects.get(name="Ariquemes", state="RO")
 
     def test_validate_category(self):
         fixed_params = {
@@ -38,9 +39,6 @@ class TestBusinessModel(TestCase):
                 category="C17",
                 **fixed_params
             )
-        
-        # Tear down
-        business.delete()
 
     def test_validate_public_phone(self):
         fixed_params = {
@@ -73,9 +71,6 @@ class TestBusinessModel(TestCase):
                 **fixed_params
             )
 
-        # Tear down
-        business.delete()
-
     def test_validate_restricted_phone(self):
         fixed_params = {
             "city": self.city,
@@ -106,9 +101,6 @@ class TestBusinessModel(TestCase):
                 restricted_phone="+55 11 995954250",
                 **fixed_params
             )
-
-        # Tear down
-        business.delete()
         
     def test_validate_schedule(self):
         with self.assertRaises(ValidationError):
@@ -157,9 +149,6 @@ class TestBusinessModel(TestCase):
         with self.assertRaises(ValidationError):
             Business.objects.create(**params)
 
-        # Tear down
-        business.delete()
-
     def test_standardize_data(self):
         business = Business.objects.create(
             name="clínica fagundes",
@@ -182,9 +171,3 @@ class TestBusinessModel(TestCase):
         self.assertEqual(Business.objects.get(id=1).public_phone, "1234567890")
         self.assertEqual(Business.objects.get(id=1).restricted_phone, "1234567890")
         self.assertEqual(Business.objects.get(id=1).email, "clinica@fagundes.com")
-
-        # Tear down
-        business.delete()
-
-    def tearDown(self) -> None:
-        Business.objects.all().delete()

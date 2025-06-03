@@ -6,8 +6,9 @@ from datetime import timedelta
 
 class TestServiceModel(TestCase):
 
-    def setUp(self) -> None:
-        self.business = Business.objects.create(
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.business = Business.objects.create(
             name="Clínica Fagundes",
             category="C1",
             city=City.objects.get(name="Ariquemes", state="RO"),
@@ -39,9 +40,6 @@ class TestServiceModel(TestCase):
         with self.assertRaises(ValidationError):
             Service.objects.create(**fixed_params, price=-100.00)
 
-        # Tear down
-        service.delete()
-
     def test_validate_duration(self):
         fixed_params = {
             "business": self.business,
@@ -55,9 +53,6 @@ class TestServiceModel(TestCase):
 
         with self.assertRaises(ValidationError):
             Service.objects.create(**fixed_params, duration=timedelta(seconds=59))
-
-        # Tear down
-        service.delete()
 
     def test_unique_constraint(self):
         params = {
@@ -73,9 +68,6 @@ class TestServiceModel(TestCase):
 
         with self.assertRaises(ValidationError):
             Service.objects.create(**params)
-
-        # Tear down
-        service.delete()
 
     def test_standardize_data(self):
         service_one = Service.objects.create(
@@ -95,11 +87,3 @@ class TestServiceModel(TestCase):
         )
         self.assertEqual(Service.objects.get(id=1).name, "Serviço de teste")
         self.assertEqual(Service.objects.get(id=2).name, "Outro serviço")
-
-        # Tear down
-        service_one.delete()
-        service_two.delete()
-
-    def tearDown(self) -> None:
-        Service.objects.all().delete()
-        self.business.delete()

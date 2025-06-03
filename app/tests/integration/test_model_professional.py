@@ -5,8 +5,9 @@ from app.models import Professional, Business, City
 
 class TestProfessionalModel(TestCase):
 
-    def setUp(self) -> None:
-        self.business = Business.objects.create(
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.business = Business.objects.create(
             name="Clínica Fagundes",
             category="C1",
             city=City.objects.get(name="Ariquemes", state="RO"),
@@ -45,9 +46,6 @@ class TestProfessionalModel(TestCase):
 
         with self.assertRaises(ValidationError):
             Professional.objects.create(**fixed_params, cpf="111.111.111-11")
-
-        # Tear down
-        professional.delete()
 
     def test_validate_schedule(self):
         with self.assertRaises(ValidationError):
@@ -90,9 +88,6 @@ class TestProfessionalModel(TestCase):
         with self.assertRaises(ValidationError):
             Professional.objects.create(**params)
 
-        # Tear down
-        professional.delete()
-
     def test_standardize_data(self):
         professional = Professional.objects.create(
             business=self.business,
@@ -115,10 +110,3 @@ class TestProfessionalModel(TestCase):
         self.assertEqual(Professional.objects.get(id=1).speciality, "Cardiologista")
         self.assertEqual(Professional.objects.get(id=1).email, "joao.silva@example.com")
         self.assertEqual(Professional.objects.get(id=1).phone, "2134567890")
-
-        # Tear down
-        professional.delete()
-
-    def tearDown(self) -> None:
-        Professional.objects.all().delete()
-        self.business.delete()

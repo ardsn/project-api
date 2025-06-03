@@ -7,14 +7,15 @@ from zoneinfo import ZoneInfo
 
 class TestAvailableDayModel(TestCase):
 
-    def setUp(self) -> None:
-        self.today: date = (
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.today: date = (
             datetime
             .now(tz=ZoneInfo("America/Sao_Paulo"))
             .date()
         )
 
-        self.business = Business.objects.create(
+        cls.business = Business.objects.create(
             name="Clínica Fagundes",
             category="C1",
             city=City.objects.get(name="Ariquemes", state="RO"),
@@ -32,8 +33,8 @@ class TestAvailableDayModel(TestCase):
             closed_on_holidays=False
         )
 
-        self.professional = Professional.objects.create(
-            business=self.business,
+        cls.professional = Professional.objects.create(
+            business=cls.business,
             name="JOÃO DA SILVA",
             cpf="111.444.777-35",
             speciality="cardiologista",
@@ -66,9 +67,6 @@ class TestAvailableDayModel(TestCase):
                 date=self.today - timedelta(days=1)
             )
 
-        # Tear down
-        available_day.delete()
-
     def test_unique_constraint(self):
         params = {
             "business": self.business,
@@ -81,11 +79,3 @@ class TestAvailableDayModel(TestCase):
 
         with self.assertRaises(ValidationError):
             AvailableDay.objects.create(**params)
-
-        # Tear down
-        available_day.delete()
-
-    def tearDown(self) -> None:
-        AvailableDay.objects.all().delete()
-        self.business.delete()
-        self.professional.delete()
