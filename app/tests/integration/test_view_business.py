@@ -63,8 +63,7 @@ class TestBusinessView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_business(self):
-        business_data = self.business_args.copy()
-        business_data |= {"city": 1}
+        business_data = self.business_args |{"city": 1}
         response = self.client.post(
             reverse('business-list'),
             business_data,
@@ -74,9 +73,8 @@ class TestBusinessView(APITestCase):
         self.assertEqual(Business.objects.count(), 1)
 
     def test_create_business_unauthenticated(self):
-        business_data = self.business_args.copy()
-        business_data |= {"city": 1}
         self.client.force_authenticate(user=None)
+        business_data = self.business_args | {"city": 1}
 
         response = self.client.post(
             reverse('business-list'),
@@ -86,8 +84,7 @@ class TestBusinessView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_business_with_invalid_field(self):
-        business_data = self.business_args.copy()
-        business_data |= {"city": 1, "public_phone": "3456-7890"}
+        business_data = self.business_args | {"city": 1, "public_phone": "3456-7890"}
 
         response = self.client.post(
             reverse('business-list'),
