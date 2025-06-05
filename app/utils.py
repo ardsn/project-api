@@ -1,5 +1,6 @@
 import logging
 from typing import Any, Iterable
+from datetime import timedelta
 import enum
 import httpx
 
@@ -50,8 +51,26 @@ def fetch_cities() -> Iterable[dict[str, Any]]:
 
 
 def standardize_numeric_string(value: str) -> str:
+    """
+    Standardize a numeric string by removing
+    non-numeric characters
+    """
     return "".join(filter(str.isdigit, value))
 
 
 def standardize_email(email: str) -> str:
+    """
+    Standardize an email address by removing spaces
+    and converting to lowercase
+    """
     return email.replace(" ", "").lower()
+
+
+def timedelta_to_string(td: timedelta) -> str:
+    """
+    Convert a timedelta to a string in the format "HH:MM:SS"
+    """
+    total_seconds = int(td.total_seconds())
+    hours, remainder = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
