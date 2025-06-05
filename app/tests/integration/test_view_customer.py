@@ -99,6 +99,31 @@ class TestCustomerView(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_refuse_duplicate_customer(self):
+        response = self.client.post(
+            reverse('customer-list'),
+            self.customer_args | {"business": self.business.id},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        customer_data = (
+            self.customer_args
+            |
+            {
+                "business": self.business.id,
+                "email": "test2@example.com",
+                "phone": "(89) 99595-4250"
+            }
+        )
+
+        response = self.client.post(
+            reverse('customer-list'),
+            customer_data,
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_update_customer_field(self):
         customer = Customer.objects.create(**self.customer_args)
         updated_field = {"name": "Test Customer 2"}

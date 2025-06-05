@@ -13,10 +13,11 @@ class TestBusinessView(APITestCase):
             email='test@example.com',
             password='testpass123'
         )
+        cls.city = City.objects.get(name="Ariquemes", state="RO")
         cls.business_args = {
             "name": "Clínica Fagundes",
             "category": "C1",
-            "city": City.objects.get(name="Ariquemes", state="RO"),
+            "city": cls.city,
             "address": "Rua 1",
             "public_phone": "(12) 3456-7890",
             "restricted_phone": "(12) 3456-7890",
@@ -63,7 +64,7 @@ class TestBusinessView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_business(self):
-        business_data = self.business_args |{"city": 1}
+        business_data = self.business_args | {"city": self.city.id}
         response = self.client.post(
             reverse('business-list'),
             business_data,
@@ -74,7 +75,7 @@ class TestBusinessView(APITestCase):
 
     def test_create_business_unauthenticated(self):
         self.client.force_authenticate(user=None)
-        business_data = self.business_args | {"city": 1}
+        business_data = self.business_args | {"city": self.city.id}
 
         response = self.client.post(
             reverse('business-list'),
@@ -84,8 +85,32 @@ class TestBusinessView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_business_with_invalid_field(self):
-        business_data = self.business_args | {"city": 1, "public_phone": "3456-7890"}
+        business_data = self.business_args | {"city": self.city.id, "public_phone": "3456-7890"}
 
+        response = self.client.post(
+            reverse('business-list'),
+            business_data,
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_refuse_duplicate_business(self):
+        response = self.client.post(
+            reverse('business-list'),
+            self.business_args | {"city": self.city.id},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        business_data = (
+            self.business_args
+            |
+            {
+                "city": self.city.id,
+                "email": "clinica2@fagundes.com",
+                "closed_on_holidays": True
+            }
+        )
         response = self.client.post(
             reverse('business-list'),
             business_data,
