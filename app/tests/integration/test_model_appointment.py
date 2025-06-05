@@ -147,19 +147,3 @@ class TestAppointmentModel(TestCase):
 
         with self.assertRaises(ValidationError):
             Appointment.objects.create(**params)
-
-    def test_standardize_data(self):
-
-        appointment = Appointment.objects.create(
-            business=self.business,
-            customer=self.customer,
-            service=self.service,
-            professional=self.professional,
-            datetime=self.now + timedelta(days=1),
-            status="Scheduled",
-            source="website"
-        )
-
-        self.assertIsInstance(appointment, Appointment)
-        self.assertEqual(Appointment.objects.get(id=1).status, "SCHEDULED")
-        self.assertEqual(Appointment.objects.get(id=1).source, "WEBSITE")

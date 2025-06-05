@@ -68,22 +68,3 @@ class TestServiceModel(TestCase):
 
         with self.assertRaises(ValidationError):
             Service.objects.create(**params)
-
-    def test_standardize_data(self):
-        service_one = Service.objects.create(
-            business=self.business,
-            name="serviço de teste",
-            description="Descrição do serviço",
-            price=100.00,
-            duration=timedelta(hours=1)
-        )
-
-        service_two = Service.objects.create(
-            business=self.business,
-            name="Outro Serviço",
-            description="Descrição do serviço",
-            price=800.00,
-            duration=timedelta(hours=1)
-        )
-        self.assertEqual(Service.objects.get(id=1).name, "Serviço de teste")
-        self.assertEqual(Service.objects.get(id=2).name, "Outro serviço")

@@ -148,26 +148,3 @@ class TestBusinessModel(TestCase):
 
         with self.assertRaises(ValidationError):
             Business.objects.create(**params)
-
-    def test_standardize_data(self):
-        business = Business.objects.create(
-            name="clínica fagundes",
-            category="C1",
-            city=self.city,
-            address="Rua 1",
-            public_phone="(12) 3456-7890",
-            restricted_phone="(12) 3456-7890",
-            email="CLINICA@FAGUNDES.COM ",
-            schedule={
-                "0": {
-                    "start": "08:00",
-                    "end": "17:00",
-                    "breaks": []
-                }
-            },
-            closed_on_holidays=False
-        )
-        self.assertEqual(Business.objects.get(id=1).name, "Clínica Fagundes")
-        self.assertEqual(Business.objects.get(id=1).public_phone, "1234567890")
-        self.assertEqual(Business.objects.get(id=1).restricted_phone, "1234567890")
-        self.assertEqual(Business.objects.get(id=1).email, "clinica@fagundes.com")

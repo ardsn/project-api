@@ -87,26 +87,3 @@ class TestProfessionalModel(TestCase):
 
         with self.assertRaises(ValidationError):
             Professional.objects.create(**params)
-
-    def test_standardize_data(self):
-        professional = Professional.objects.create(
-            business=self.business,
-            name="JOÃO DA SILVA",
-            cpf="111.444.777-35 ",
-            speciality="cardiologista",
-            email="Joao.silva@example.com ",
-            phone="(21) 3456-7890",
-            schedule={
-                "0": {
-                    "start": "08:00",
-                    "end": "17:00",
-                    "breaks": []
-                }
-            }
-        )
-
-        self.assertEqual(Professional.objects.get(id=1).name, "João Da Silva")
-        self.assertEqual(Professional.objects.get(id=1).cpf, "11144477735")
-        self.assertEqual(Professional.objects.get(id=1).speciality, "Cardiologista")
-        self.assertEqual(Professional.objects.get(id=1).email, "joao.silva@example.com")
-        self.assertEqual(Professional.objects.get(id=1).phone, "2134567890")

@@ -88,18 +88,3 @@ class TestCustomerModel(TestCase):
 
         with self.assertRaises(ValidationError):
             Customer.objects.create(**params)
-
-    def test_standardize_data(self):
-        customer = Customer.objects.create(
-            business=self.business,
-            name="João da Silva",
-            email="JOAO.SILVA@EXAMPLE.COM ",
-            phone="(21) 3456-7890",
-            cpf="111.444.777-35",
-            registration_source="website"
-        )
-        self.assertEqual(Customer.objects.get(id=1).name, "João Da Silva")
-        self.assertEqual(Customer.objects.get(id=1).registration_source, "WEBSITE")
-        self.assertEqual(Customer.objects.get(id=1).email, "joao.silva@example.com")
-        self.assertEqual(Customer.objects.get(id=1).phone, "2134567890")
-        self.assertEqual(Customer.objects.get(id=1).cpf, "11144477735")

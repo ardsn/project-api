@@ -78,11 +78,6 @@ class Business(models.Model):
         return f"{self.name} | {self.category} | {self.city}"
 
     def save(self, **kwargs):
-        # Standardize the data for database
-        self.name = self.name.title()
-        self.public_phone = standardize_numeric_string(self.public_phone)
-        self.restricted_phone = standardize_numeric_string(self.restricted_phone)
-        self.email = standardize_email(self.email)
         # Run all validations for the model
         self.full_clean()
         super().save(**kwargs)
@@ -120,13 +115,6 @@ class Customer(models.Model):
         return self.name
 
     def save(self, **kwargs):
-        # Standardize the data for database
-        self.name = self.name.title()
-        self.registration_source = self.registration_source.upper()
-        self.email = standardize_email(self.email)
-        # Remove non numeric characters
-        self.phone = standardize_numeric_string(self.phone)
-        self.cpf = standardize_numeric_string(self.cpf)
         # Run all validations for the model
         self.full_clean()
         super().save(**kwargs)
@@ -158,8 +146,6 @@ class Service(models.Model):
         return self.name
 
     def save(self, **kwargs):
-        # Standardize the data for database
-        self.name = self.name.capitalize()
         # Run all validations for the model
         self.full_clean()
         super().save(**kwargs)
@@ -192,13 +178,6 @@ class Professional(models.Model):
         return self.name
     
     def save(self, **kwargs):
-        # Standardize the data for database
-        self.email = standardize_email(self.email)
-        self.speciality = self.speciality.capitalize()
-        self.name = self.name.title()
-        # Remove non numeric characters
-        self.phone = standardize_numeric_string(self.phone)
-        self.cpf = standardize_numeric_string(self.cpf)
         # Run all validations for the model
         self.full_clean()
         super().save(**kwargs)
@@ -266,9 +245,6 @@ class Appointment(models.Model):
         ]
 
     def save(self, **kwargs):
-        # Standardize the data for database
-        self.status = self.status.upper()
-        self.source = self.source.upper()
         # Run all validations for the model
         self.full_clean()
         super().save(**kwargs)
