@@ -1,0 +1,32 @@
+[run]
+source = .
+omit = 
+    */venv/*
+    */env/*
+    */migrations/*
+    manage.py
+    */settings/*
+    */tests/*
+    */test_*.py
+    */__pycache__/*
+    */static/*
+    */media/*
+    */node_modules/*
+    venv/*
+    env/*
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+    class .*\bProtocol\):
+    @(abc\.)?abstractmethod
+
+[html]
+directory = htmlcov 

@@ -142,6 +142,15 @@ REST_FRAMEWORK = {
     ]
 }
 
+# Disable logging during tests
+LOGGING_CONFIG = None
+
+# Coverage settings
+COVERAGE_MODULE_EXCLUDES = [
+    'tests$', 'settings$', 'urls$', 'locale$',
+    'migrations', 'fixtures', 'admin$', '__pycache__',
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
