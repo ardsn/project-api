@@ -51,7 +51,7 @@ class TestAppointmentModel(TestCase):
             email="JOAO.SILVA@EXAMPLE.COM",
             phone="(21) 3456-7890",
             cpf="111.444.777-35",
-            registration_source="website"
+            registration_source="WEBSITE"
         )
 
         cls.service = Service.objects.create(
@@ -72,7 +72,7 @@ class TestAppointmentModel(TestCase):
             "customer": self.customer,
             "service": self.service,
             "professional": self.professional,
-            "source": "whatsapp"
+            "source": "WHATSAPP"
         }
 
         appointment = Appointment.objects.create(
@@ -94,12 +94,12 @@ class TestAppointmentModel(TestCase):
             "service": self.service,
             "professional": self.professional,
             "datetime": self.now + timedelta(days=1),
-            "source": "website"
+            "source": "WEBSITE"
         }
 
         appointment = Appointment.objects.create(
             **fixed_params,
-            status="completed"
+            status="COMPLETED"
         )
         self.assertIsInstance(appointment, Appointment)
 
@@ -121,7 +121,7 @@ class TestAppointmentModel(TestCase):
 
         appointment = Appointment.objects.create(
             **fixed_params,
-            source="whatsapp"
+            source="WHATSAPP"
         )
         self.assertIsInstance(appointment, Appointment)
 
