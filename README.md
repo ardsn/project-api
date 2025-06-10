@@ -172,8 +172,8 @@ erDiagram
 
 ```bash
 # Clonar o repositório
-git clone https://github.com/seu-usuario/project-backend.git
-cd project-backend
+git clone https://github.com/ardsn/project-api.git
+cd project-api
 
 # Criar ambiente virtual
 python -m venv venv
@@ -419,7 +419,7 @@ app/tests/
 ## 📁 Estrutura do Projeto
 
 ```
-project-backend/
+project-api/
 ├── 📁 app/                     # Aplicação principal
 │   ├── 📁 migrations/          # Migrações do banco
 │   │   ├── 📁 integration/    # Testes de integração
@@ -539,9 +539,9 @@ Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICE
 
 ## 📞 Contato
 
-- **Desenvolvedor**: [Seu Nome](mailto:seu-email@exemplo.com)
-- **Projeto**: [GitHub](https://github.com/seu-usuario/project-backend)
-- **Issues**: [GitHub Issues](https://github.com/seu-usuario/project-backend/issues)
+- **Desenvolvedor**: [Antonio Rodrigues de Sousa Neto](mailto:rod_sn@hotmail.com)
+- **Projeto**: [GitHub](https://github.com/ardsn/project-api)
+- **Issues**: [GitHub Issues](https://github.com/ardsn/project-api/issues)
 
 ---
 

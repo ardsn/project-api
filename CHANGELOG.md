@@ -105,6 +105,6 @@ e este projeto adere ao [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## 🔗 Links
 
-- [Repository](https://github.com/seu-usuario/project-backend)
-- [Issues](https://github.com/seu-usuario/project-backend/issues)
-- [Pull Requests](https://github.com/seu-usuario/project-backend/pulls) 
+- [Repository](https://github.com/ardsn/project-api)
+- [Issues](https://github.com/ardsn/project-api/issues)
+- [Pull Requests](https://github.com/ardsn/project-api/pulls) 

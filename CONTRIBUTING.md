@@ -23,8 +23,8 @@ Obrigado por considerar contribuir para o Sistema de Agendamentos! Este document
 1. **Fork** o repositório no GitHub
 2. **Clone** seu fork localmente:
    ```bash
-   git clone https://github.com/SEU_USERNAME/project-backend.git
-   cd project-backend
+   git clone https://github.com/SEU_USERNAME/project-api.git
+   cd project-api
    ```
 3. **Configure** o ambiente de desenvolvimento:
    ```bash
@@ -40,7 +40,7 @@ Obrigado por considerar contribuir para o Sistema de Agendamentos! Este document
 
 ## 🐛 Reportando Bugs
 
-Antes de reportar um bug, verifique se ele já não foi reportado nas [Issues](https://github.com/seu-usuario/project-backend/issues).
+Antes de reportar um bug, verifique se ele já não foi reportado nas [Issues](https://github.com/ardsn/project-api/issues).
 
 ### Como reportar um bug:
 
